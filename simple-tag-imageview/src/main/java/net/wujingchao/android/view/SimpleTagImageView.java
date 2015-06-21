@@ -18,14 +18,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
-import wujingchao.net.mylibrary.R;
 
 /**
  * @author wujingchao  2015-02-20 email:wujingchao@aliyun.com
  */
 public class SimpleTagImageView extends ImageView {
 
-    private final static String TAG = "SimpleTagImageView";
+    public static final String TAG = "SimpleTagImageView";
 
     public  static final byte LEFT_TOP = 0x00;
 
@@ -35,13 +34,13 @@ public class SimpleTagImageView extends ImageView {
 
     public  static final byte RIGHT_BOTTOM = 0x03;
 
-    private final static float THE_SQUARE_ROOT_OF_2 = (float) Math.sqrt(2);
+    private static final float THE_SQUARE_ROOT_OF_2 = (float) Math.sqrt(2);
 
-    private final static int DEFAULT_TAG_WIDTH = 20;
+    private static final int DEFAULT_TAG_WIDTH = 20;
 
-    private final static int DEFAULT_CORNER_DISTANCE = 20;
+    private static final int DEFAULT_CORNER_DISTANCE = 20;
 
-    private final static int DEFAULT_TAG_BACKGROUND_COLOR = 0x9F27CDC0;
+    private static final int DEFAULT_TAG_BACKGROUND_COLOR = 0x9F27CDC0;
 
     private static final int DEFAULT_TAG_TEXT_SIZE = 15;
 
@@ -115,27 +114,124 @@ public class SimpleTagImageView extends ImageView {
         mRoundRect = new RectF();
     }
 
-    private void setupBitmapPaint() {
-        Drawable drawable = getDrawable();
-        if (drawable == null) {
-            return;
-        }
-        Bitmap mBitmap = drawableToBitmap(drawable);
-        BitmapShader mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        if(getScaleType() != ScaleType.FIT_XY){
-            Log.w(TAG,String.format("Now scale type just support fitXY,other type invalid"));
-        }
-        //now scale type just support fitXY
-        //todo support all scale type
-        Matrix mMatrix = new Matrix();
-        mMatrix.setScale(getWidth() * 1.0f / mBitmap.getWidth(), getHeight() * 1.0f / mBitmap.getHeight());
-        mBitmapShader.setLocalMatrix(mMatrix);
-        if(mBitmapPaint == null) {
-            mBitmapPaint = new Paint();
-            mBitmapPaint.setDither(false);
-            mBitmapPaint.setAntiAlias(true);
-            mBitmapPaint.setShader(mBitmapShader);
-        }
+    /**
+     *
+     * @param textSize unit:dip
+     */
+    public void setTagTextSize(int textSize) {
+        this.mTagTextSize = dip2px(textSize);
+        invalidate();
+    }
+
+    public int getTagTextSize(){
+        return mTagTextSize;
+    }
+
+    /**
+     *
+     * @param cornerDistance unit:dip
+     */
+    public void setCornerDistance(int cornerDistance) {
+        if(this.mCornerDistance == cornerDistance)return;
+        this.mCornerDistance = dip2px(cornerDistance);
+        invalidate();
+    }
+
+    /**
+     *
+     * @return unit:dip
+     */
+    public int getCornerDistance() {
+        return px2dip(this.mCornerDistance);
+    }
+
+    public int getTagTextColor() {
+        return this.mTagTextColor;
+    }
+
+    public void setTagTextColor(int tagTextColor) {
+        if(this.mTagTextColor == tagTextColor)return;
+        this.mTagTextColor = tagTextColor;
+        invalidate();
+    }
+
+    public String getTagText() {
+        return this.mTagText;
+    }
+
+    public void setTagText(String tagText){
+        if(tagText.equals(this.mTagText))return;
+        this.mTagText = tagText;
+        invalidate();
+    }
+
+    public void setTagBackgroundColor(int tagBackgroundColor) {
+        if(this.mTagBackgroundColor == tagBackgroundColor)return;
+        this.mTagBackgroundColor = tagBackgroundColor;
+        invalidate();
+    }
+
+    public int getTagBackgroundColor() {
+        return this.mTagBackgroundColor;
+    }
+
+    /**
+     * @return unit:dip
+     */
+    public int getTagWidth() {
+        return px2dip(this.mTagWidth);
+    }
+
+    /**
+     *
+     * @param tagWidth unit:dip
+     */
+    public void setTagWidth(int tagWidth) {
+        this.mTagWidth = dip2px(tagWidth);
+        invalidate();
+    }
+
+    /**
+     * @return  0 : left_top
+     *          1 : right_top
+     *          2 : left_bottom
+     *          3 : right_bottom
+     */
+    public int getTagOrientation() {
+        return mTagOrientation;
+    }
+
+    /**
+     *
+     * @param tagOrientation {@link #LEFT_TOP} or
+     *                       {@link #LEFT_BOTTOM} or
+     *                       {@link #RIGHT_TOP} or
+     *                       {@link #RIGHT_BOTTOM}
+     */
+    public void setTagOrientation(int tagOrientation) {
+        if(tagOrientation == this.mTagOrientation)return;
+        this.mTagOrientation = tagOrientation;
+        invalidate();
+    }
+
+    public void setTagEnable(boolean tagEnable) {
+        if(this.mTagEnable == tagEnable) return ;
+        this.mTagEnable = tagEnable;
+        invalidate();
+    }
+
+    public boolean getTagEnable() {
+        return this.mTagEnable;
+    }
+
+    public  int getTagRoundRadius() {
+        return this.mRoundRadius;
+    }
+
+    public void setTagRoundRadius(int roundRadius) {
+        if(this.mRoundRadius == roundRadius) return;
+        this.mRoundRadius = roundRadius;
+        invalidate();
     }
 
     @Override
@@ -208,137 +304,28 @@ public class SimpleTagImageView extends ImageView {
         }
     }
 
-    /**
-     *
-     * @param textSize unit:dip
-     */
-    public void setTagTextSize(int textSize) {
-        this.mTagTextSize = dip2px(textSize);
-        invalidate();
+    private void setupBitmapPaint() {
+        Drawable drawable = getDrawable();
+        if (drawable == null) {
+            return;
+        }
+        Bitmap mBitmap = drawableToBitmap(drawable);
+        BitmapShader mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        if(getScaleType() != ScaleType.FIT_XY){
+            Log.w(TAG,String.format("Now scale type just support fitXY,other type invalid"));
+        }
+        //now scale type just support fitXY
+        //todo support all scale type
+        Matrix mMatrix = new Matrix();
+        mMatrix.setScale(getWidth() * 1.0f / mBitmap.getWidth(), getHeight() * 1.0f / mBitmap.getHeight());
+        mBitmapShader.setLocalMatrix(mMatrix);
+        if(mBitmapPaint == null) {
+            mBitmapPaint = new Paint();
+            mBitmapPaint.setDither(false);
+            mBitmapPaint.setAntiAlias(true);
+            mBitmapPaint.setShader(mBitmapShader);
+        }
     }
-
-    @SuppressWarnings("unused")
-    public int getTagTextSize(){
-        return mTagTextSize;
-    }
-
-    /**
-     *
-     * @param cornerDistance unit:dip
-     */
-    public void setCornerDistance(int cornerDistance) {
-        if(this.mCornerDistance == cornerDistance)return;
-        this.mCornerDistance = dip2px(cornerDistance);
-        invalidate();
-    }
-
-    /**
-     *
-     * @return unit:dip
-     */
-    @SuppressWarnings("unused")
-    public int getCornerDistance() {
-        return px2dip(this.mCornerDistance);
-    }
-
-    @SuppressWarnings("unused")
-    public int getTagTextColor() {
-        return this.mTagTextColor;
-    }
-
-    public void setTagTextColor(int tagTextColor) {
-        if(this.mTagTextColor == tagTextColor)return;
-        this.mTagTextColor = tagTextColor;
-        invalidate();
-    }
-
-    @SuppressWarnings("unused")
-    public String getTagText() {
-        return this.mTagText;
-    }
-
-    public void setTagText(String tagText){
-        if(tagText.equals(this.mTagText))return;
-        this.mTagText = tagText;
-        invalidate();
-    }
-
-    public void setTagBackgroundColor(int tagBackgroundColor) {
-        if(this.mTagBackgroundColor == tagBackgroundColor)return;
-        this.mTagBackgroundColor = tagBackgroundColor;
-        invalidate();
-    }
-
-    @SuppressWarnings("unused")
-    public int getTagBackgroundColor() {
-        return this.mTagBackgroundColor;
-    }
-
-    /**
-     * @return unit:dip
-     */
-    @SuppressWarnings("unused")
-    public int getTagWidth() {
-        return px2dip(this.mTagWidth);
-    }
-
-    /**
-     *
-     * @param tagWidth unit:dip
-     */
-    public void setTagWidth(int tagWidth) {
-        this.mTagWidth = dip2px(tagWidth);
-        invalidate();
-    }
-
-    /**
-     * @return  0 : left_top
-     *          1 : right_top
-     *          2 : left_bottom
-     *          3 : right_bottom
-     */
-    @SuppressWarnings("unused")
-    public int getTagOrientation() {
-        return mTagOrientation;
-    }
-
-    /**
-     *
-     * @param tagOrientation {@link #LEFT_TOP} or
-     *                       {@link #LEFT_BOTTOM} or
-     *                       {@link #RIGHT_TOP} or
-     *                       {@link #RIGHT_BOTTOM}
-     */
-    public void setTagOrientation(int tagOrientation) {
-        if(tagOrientation == this.mTagOrientation)return;
-        this.mTagOrientation = tagOrientation;
-        invalidate();
-    }
-
-    @SuppressWarnings("unused")
-    public void setTagEnable(boolean tagEnable) {
-        if(this.mTagEnable == tagEnable) return ;
-        this.mTagEnable = tagEnable;
-        invalidate();
-    }
-
-    @SuppressWarnings("unused")
-    public boolean getTagEnable() {
-        return this.mTagEnable;
-    }
-
-    @SuppressWarnings("unused")
-    public  int getTagRoundRadius() {
-        return this.mRoundRadius;
-    }
-
-    public void setTagRoundRadius(int roundRadius) {
-        if(this.mRoundRadius == roundRadius) return;
-        this.mRoundRadius = roundRadius;
-        invalidate();
-    }
-
-
 
     private int dip2px(int dip) {
         return (int)(mDensity * dip + 0.5f);

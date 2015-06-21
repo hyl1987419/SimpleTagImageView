@@ -3,13 +3,13 @@ ImageView with a tag in android. So it's a ImageView.
 
 ## Demo
 
-   <img src="./demo2.gif"  width="401" heigit="638" alt="Screenshot"/>
+   <img src="https://raw.githubusercontent.com/wujingchao/SimpleTagImageView/master/demo2.gif"  width="401" heigit="638" alt="Screenshot"/>
 
 
 ####Warning:When you set the round radius,the simpletagimageview scale type just  support fitXY now!
 <br/>
 <p>
-   <img src="./demo.jpg"  width="540" heigit="960" alt="Screenshot"/>
+   <img src="https://raw.githubusercontent.com/wujingchao/SimpleTagImageView/master/demo.jpg"  width="540" heigit="960" alt="Screenshot"/>
 </p>
 
 <br/>
@@ -37,23 +37,23 @@ ImageView with a tag in android. So it's a ImageView.
 
 ####Gradle
 
-	compile 'net.wujingchao.android.view:simple-tag-imageview:1.0.0'
+	compile 'net.wujingchao.android.view:simple-tag-imageview:1.0.1'
 
 ####Maven
+	
+	<!-- you should configure jcenter repository-->
 	<dependency>
 		<groupId>net.wujingchao.android.view</groupId>
 		<artifactId>simple-tag-imageview</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 		<type>aar</type>
 	</dependency> 
 
-####Ivy
 
-	<dependency org='simple-tag-imageview' name='net.wujingchao.android.view' rev='1.0.0'>
-		<artifact name='net.wujingchao.android.view' ext='aar'></artifact>
-	</dependency>
+##Developed By
 
-######You can mail me => wujingchao@aliyun.com
+
+- wujingchao -  wujingchao@aliyun.com
 
 
 
